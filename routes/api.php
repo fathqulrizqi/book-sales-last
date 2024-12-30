@@ -21,6 +21,4 @@ Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
 
 
 
-Route::get('/authors', [AuthorController::class, 'index']);
-Route::post('/authors', [AuthorController::class, 'store']);
-Route::put('/authors/{id}', [AuthorController::class, 'update']);
+Route::apiResource('/authors', AuthorController::class);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AuthorResource;
 use App\Models\Author;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -11,8 +12,8 @@ use Illuminate\Support\Facades\Validator;
 class AuthorController extends Controller
 {
     public function index() {
-      $authors = Author::all();
-      return response()->json($authors);
+        $authors = Author::all();
+        return new AuthorResource(true, "Get All Resource", $authors);
     }
 
     public function store(Request $request) {
@@ -92,7 +93,6 @@ class AuthorController extends Controller
             $data['photo'] = $image->hashName();
         }
 
-
         // update data baru
         $author->update($data);
 
@@ -101,5 +101,29 @@ class AuthorController extends Controller
             "message" => "Resource updated successfully!",
             "data" => $author
         ]);
+    }
+
+    public function destroy(string $id) {
+        $author = Author::find($id);
+
+        if (!$author) {
+            return response()->json([
+            "success" => false,
+            "message" => "Resource not found!"
+            ], 404);
+        }
+
+        if ($author->photo) {
+            // delete image from storage
+            Storage::disk('public')->delete('authors/' . $author->photo);
+        }
+
+        // delete data from db
+        $author->delete();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Resource deleted successfully!"
+        ], 200);
     }
 }

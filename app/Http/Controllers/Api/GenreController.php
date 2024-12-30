@@ -98,7 +98,10 @@ class GenreController extends Controller
           ], 422);
         }
 
-        $genre->update($request->only("name", "description"));
+        $genre->update([
+            "name" => $request->name,
+            "description" => $request->description
+        ]);
 
         return response()->json([
           "success" => true,
