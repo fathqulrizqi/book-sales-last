@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AuthorController extends Controller
@@ -47,5 +48,58 @@ class AuthorController extends Controller
         "message" => "Resource added successfully!",
         "data" => $author
       ], 201);
+    }
+
+    public function update(Request $request, string $id) {
+        // cari data author
+        $author = Author::find($id);
+
+        if (!$author) {
+            return response()->json([
+            "success" => false,
+            "message" => "Resource not found!"
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'bio' => 'nullable|string'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+            "success" => false,
+            "message" => $validator->errors()
+            ], 422);
+        }
+
+        // siapkan data yang ingin diupdate
+        $data = [
+            "name" => $request->name,
+            "bio" => $request->bio
+        ];
+
+        // ...upload image
+        if ($request->hasFile('photo')) {
+            $image = $request->file('photo');
+            $image->store('authors', 'public');
+
+            if ($author->photo) {
+                Storage::disk('public')->delete('authors/' . $author->photo);
+            }
+
+            $data['photo'] = $image->hashName();
+        }
+
+
+        // update data baru
+        $author->update($data);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Resource updated successfully!",
+            "data" => $author
+        ]);
     }
 }
