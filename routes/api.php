@@ -15,6 +15,9 @@ Route::get('/books', [BookController::class, 'index']);
 
 Route::get('/genres', [GenreController::class, 'index']);
 Route::post('/genres', [GenreController::class, 'store']);
+Route::get('/genres/{id}', [GenreController::class, 'show']);
+Route::put('/genres/{id}', [GenreController::class, 'update']);
+Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
 
 
 
