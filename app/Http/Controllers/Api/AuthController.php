@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 use function Symfony\Component\String\b;
 
@@ -58,7 +60,7 @@ class AuthController extends Controller
         // Setup validator
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required|string'
+            'password' => 'required'
         ]);
 
         // Check validator
@@ -89,4 +91,23 @@ class AuthController extends Controller
     /**
      * Logout user and invalidate token
      */
+
+    public function logout(Request $request) {
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+
+            // If logout success
+            return response()->json([
+                'success' => true,
+                'message' => 'Logout successfully!'
+            ], 200);
+
+        } catch (JWTException $e) {
+            // If logout failed
+            return response()->json([
+                'success' => false,
+                'message' => 'Logout failed!'
+            ], 500);
+        }
+    }
 }
