@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,19 +14,22 @@ class BookController extends Controller
     public function index(){ 
         $books = Book::all();
 
-        if($books->isEmpty()){
-            return response()->json([
-                "status" => true,
-                "message" => "Resource data not found!",
-            ], 200); //validasi read gagal
-        }
+        // if($books->isEmpty()){
+        //     return response()->json([
+        //         "status" => true,
+        //         "message" => "Resource data not found!",
+        //     ], 200); //validasi read gagal
+        // }
 
-        return response()->json([
-            "status" => true,
-            "message" => "Get All Resource",
-            "data" => $books
-        ], 200); //validasi read berhasil
-}
+        return new BookResource(true, "Get All Resource", $books);
+    }
+
+//         return response()->json([
+//             "status" => true,
+//             "message" => "Get All Resource",
+//             "data" => $books
+//         ], 200); //validasi read berhasil
+// }
 
 public function store(Request $request)
     {
@@ -63,11 +67,12 @@ public function store(Request $request)
             "author_id" => $request->author_id
         ]);
 
-        return response()->json([
-            "success" => true,
-            "message" => "Resource added succesfully",
-            "data" => $book
-        ], 201); // validasi create success
+        // return response()->json([
+        //     "success" => true,
+        //     "message" => "Resource added succesfully",
+        //     "data" => $book
+        // ], 201); // validasi create success
+        return new BookResource(true, "Get All Resource", $book);
     }
 
     public function show(string $id){
@@ -80,11 +85,12 @@ public function store(Request $request)
             ], 404); // validasi resource tidak ditemukan
         }
 
-        return response()->json([
-            "success" => true,
-            "message" => "Get detail resource",
-            "data" => $book
-        ], 200); // validasi create success
+        // return response()->json([
+        //     "success" => true,
+        //     "message" => "Get detail resource",
+        //     "data" => $book
+        // ], 200); // validasi create success
+        return new BookResource(true, "Get All Resource", $book);
     }
 
 
@@ -141,11 +147,12 @@ public function store(Request $request)
         // update data baru
         $book->update($data);
 
-        return response()->json([
-            "success" => true,
-            "message" => "Resource updated successfully!",
-            "data" => $book
-        ]);
+        // return response()->json([
+        //     "success" => true,
+        //     "message" => "Resource updated successfully!",
+        //     "data" => $book
+        // ]);
+        return new BookResource(true, "Get All Resource", $book);
     }
 
     public function destroy(string $id){
@@ -165,9 +172,10 @@ public function store(Request $request)
 
         $book->delete();
 
-        return response()->json([
-            "success" => true,
-            "message" => "Resource deleted successfully!"
-        ], 200);
+        // return response()->json([
+        //     "success" => true,
+        //     "message" => "Resource deleted successfully!"
+        // ], 200);
+        return new BookResource(true, "Get All Resource", $book);
     }
 }
