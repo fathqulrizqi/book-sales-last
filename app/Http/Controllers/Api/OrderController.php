@@ -34,8 +34,18 @@ class OrderController extends Controller
         // Buat nomor order unik
         $orderNumber = "ORD-" . strtoupper(uniqid());
 
+
         // Ambil data user yang sedang login
         $user = auth('api')->user();
+
+        // cek login user
+        if  (!$user) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized!'
+            ], 401);
+        }
+
 
         // ambil 1 data buku
         $book = Book::find($request->book_id);
