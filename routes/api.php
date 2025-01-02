@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\GenreController;
+use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,18 +14,23 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api'
 
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/user', fn(Request $request) => $request->user());
+    Route::get('/user', fn(Request $request) => $request->user()->id);
 
     Route::middleware(['role:admin,staff'])->group(function () {
         Route::apiResource('/books', BookController::class)->only(['store', 'update', 'destroy']);
         Route::apiResource('/genres', GenreController::class)->only(['store', 'update', 'destroy']);
         Route::apiResource('/authors', AuthorController::class)->only(['store', 'update', 'destroy']);
     });
+
+    Route::middleware(['role:customer'])->group(function () {
+        Route::apiResource('/orders', OrderController::class);
+    });
 });
 
 Route::apiResource('/books', BookController::class)->only(['index', 'show']);
 Route::apiResource('/genres', GenreController::class)->only(['index', 'show']);
 Route::apiResource('/authors', AuthorController::class)->only(['index', 'show']);
+
 
 
 
