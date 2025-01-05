@@ -7,6 +7,9 @@ use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderDetailController;
 use App\Http\Controllers\Api\PaymentMethodController;
+use App\Models\Author;
+use App\Models\Book;
+use App\Models\Genre;
 use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,16 +30,24 @@ Route::middleware(['auth:api'])->group(function () {
         Route::apiResource('/genres', GenreController::class)->only(['store', 'update', 'destroy']);
         Route::apiResource('/authors', AuthorController::class)->only(['store', 'update', 'destroy']);
     });
+    Route::middleware(['role:admin'])->group(function () {
+        Route::apiResource('/paymentmethods', PaymentMethodController::class)->only(['destroy']);
+    });
+    Route::middleware(['role:staff'])->group(function () {
+        Route::apiResource('/paymentmethods', PaymentMethodController::class)->only(['update']);
+    });
 
     // Routes untuk customer
     Route::middleware(['role:customer'])->group(function () {
         Route::apiResource('/orders', OrderController::class)->only(['index', 'store', 'show']);
         Route::apiResource('/orderdetails', OrderDetailController::class)->only(['index', 'store', 'show']);
-        Route::apiResource('/paymentmethods', PaymentMethodController::class)->only(['index','store']);
+        Route::apiResource('/paymentmethods', PaymentMethodController::class)->only(['store']);
     });
 });
 
 // Routes publik (tanpa autentikasi)
-Route::apiResource('/books', BookController::class)->only(['index', 'show']);
-Route::apiResource('/genres', GenreController::class)->only(['index', 'show']);
-Route::apiResource('/authors', AuthorController::class)->only(['index', 'show']);
+Route::apiResource('/paymentmethods', PaymentMethodController::class)->only(['index']);
+Route::apiResource('/authors', AuthorController::class)->only(['index', 'store', 'show', 'destroy']);
+Route::apiResource('/books', BookController::class)->only(['index', 'store', 'show', 'destroy']);
+Route::apiResource('/genres', GenreController::class)->only(['index', 'store', 'show', 'destroy']);
+

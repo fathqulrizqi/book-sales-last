@@ -42,10 +42,13 @@ class PaymentMethodController extends Controller
             ], 422);
         }
 
+        $image = $request->file('image');
+        $image->store('payment_methods', 'public');
+
         $paymentMethod = PaymentMethod::create([
             "name" => $request->name,
             "account_number" => $request->account_number,
-            "image" => $request->image
+            "image" => $image->hashName()
         ]);
 
         return new PaymentMethodResource(true, "Get All Resource", $paymentMethod);
@@ -66,7 +69,7 @@ class PaymentMethodController extends Controller
             ], 404);
         }
 
-        return new PaymentMethodResource(true, "Get All Resource", $paymentMethod);
+        return new PaymentMethodResource(true, "Get Resource", $paymentMethod);
     }
 
 
@@ -103,20 +106,23 @@ class PaymentMethodController extends Controller
         ];
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image->store('payment_methods', 'public');
+            $photo = $request->file('image');
+            $photo->store('payment_methods', 'public');
 
-            if (!$paymentMethod->image) {
+            if ($paymentMethod->image) {
                 Storage::disk('public')->delete('payment_methods/' . $paymentMethod->image);
-                }
+            }
 
-            $data['image'] = $image->hashName();
-
+            $data['image'] = $photo->hashName();
         }
-
         $paymentMethod->update($data);
 
-        return new PaymentMethodResource(true, "Get All Resource", $paymentMethod);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Resource updated successfully!",
+            "data" => $paymentMethod
+        ]);
     }
 
     public function destroy(string $id)
@@ -136,6 +142,6 @@ class PaymentMethodController extends Controller
 
         $paymentMethod->delete();
 
-        return new PaymentMethodResource(true, "Get All Resource", $paymentMethod);
+        return new PaymentMethodResource(true, "Resource deleted successfully", $paymentMethod);
     }
 }
