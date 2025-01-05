@@ -9,4 +9,9 @@ class Book extends Model
     protected $fillable = [
         "title", "description", "price", "stock", "cover_photo", "genre_id", "author_id"
     ];
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'book_id');
+    }
 }

@@ -67,14 +67,12 @@ class OrderController extends Controller
 
         // 3. insert data
         $order = Order::create([
-            'order_number' => $orderNumber,
-            'customer_id' => $user->id,
-            'book_id' => $request->book_id,
-            'total_amount' => $totalAmount,
-            'status' => 'pending',
+            "order_number" => $orderNumber,
+            "customer_id" => $user->id,
+            "book_id" => $request->book_id,
+            "total_amount" => $totalAmount,
         ]);
-
         // 4. return response
-        return new OrderResource(true, 'Order created successfully', $order);
+        return new OrderResource(true, "Order Created", $order);
     }
 }

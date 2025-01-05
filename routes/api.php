@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\OrderDetailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,8 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Routes untuk customer
     Route::middleware(['role:customer'])->group(function () {
-        Route::apiResource('/orders', OrderController::class)->only(['index', 'store', 'update', 'destroy', 'show']);
+        Route::apiResource('/orders', OrderController::class)->only(['index', 'store', 'show']);
+        Route::apiResource('/orderdetails', OrderDetailController::class)->only(['index', 'store', 'show']);
     });
 });
 

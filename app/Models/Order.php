@@ -13,4 +13,15 @@ class Order extends Model
         'total_amount',
         'status'
     ];
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class, 'book_id');
+    }
+
+    // Relasi ke OrderDetail
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id');
+    }
 }
