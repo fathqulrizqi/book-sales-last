@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\OrderDetail;
 use App\Models\User;
+use Faker\Provider\ar_EG\Payment;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
         AuthorSeeder::class,
         GenreSeeder::class,
         BookSeeder::class,
+        PaymentMethodSeeder::class
       ]);
     }
 }

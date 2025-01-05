@@ -6,6 +6,8 @@ use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\OrderDetailController;
+use App\Http\Controllers\Api\PaymentMethodController;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +32,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::middleware(['role:customer'])->group(function () {
         Route::apiResource('/orders', OrderController::class)->only(['index', 'store', 'show']);
         Route::apiResource('/orderdetails', OrderDetailController::class)->only(['index', 'store', 'show']);
+        Route::apiResource('/paymentmethods', PaymentMethodController::class)->only(['index','store']);
     });
 });
 
