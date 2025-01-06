@@ -18,7 +18,7 @@ return new class extends Migration
           $table->unsignedBigInteger('payment_method_id')->nullable();
           $table->decimal('amount', 10, 2);
           $table->enum('status', ['pending', 'confirmed', 'failed']);
-          $table->unsignedBigInteger('staff_confirmed_by')->nullable();
+          $table->string('staff_confirmed_by')->nullable();
           $table->timestamp('staff_confirmed_at')->nullable();
           $table->timestamps();
         });

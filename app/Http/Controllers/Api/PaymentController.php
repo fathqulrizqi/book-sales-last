@@ -29,7 +29,7 @@ class PaymentController extends Controller
         $validator = Validator::make($request->all(), [
             "order_id" => "required|exists:orders,id",
             "payment_method_id" => "required|exists:payment_methods,id",
-            
+
         ]);
 
         if ($validator->fails()) {
@@ -106,13 +106,15 @@ class PaymentController extends Controller
             ], 422);
         }
 
+        $user = auth('api')->user();
+
         // Cek apakah status pembayaran diubah menjadi 'confirmed' atau 'failed'
         if ($request->status === 'confirmed' || $request->status === 'failed') {
             // Menyimpan data staff yang mengonfirmasi pembayaran
             $data = [
                 "status" => $request->status,
-                "staff_confirmed_by" => auth('api')->user()->id, // Mengambil ID staff yang sedang login
-                "staff_confirmed_at" => now(), // Menyimpan waktu konfirmasi
+                "staff_confirmed_by" => $user->name,
+                "staff_confirmed_at" => now(),
             ];
 
             // Update data pembayaran dengan status dan konfirmasi dari staff
