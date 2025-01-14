@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
-    public function index(){ 
+    public function index(){
         $books = Book::all();
 
         // if($books->isEmpty()){
@@ -39,7 +39,7 @@ public function store(Request $request)
             "description" => "required|string",
             "price" => "required|numeric",
             "stock" => "required|integer",
-            "cover_photo" => "required|image|mimes:jpeg, jpg, png, svg, heic|max:2048",
+            "cover_photo" => "nullable|image|mimes:jpeg, jpg, png, svg, heic|max:2048",
             "genre_id" => "required|exists:genres,id",
             "author_id" => "required|exists:authors,id"
         ]);
@@ -49,7 +49,7 @@ public function store(Request $request)
             return response()->json([
                 "success" => false,
                 "message" => $validator->errors()
-            ], 422); 
+            ], 422);
         };
 
         //upload image
@@ -131,7 +131,7 @@ public function store(Request $request)
             "genre_id" => $request->genre_id,
             "author_id" => $request->author_id
         ];
-        
+
         // ...upload image
         if ($request->hasFile('cover_photo')) {
             $image = $request->file('cover_photo');

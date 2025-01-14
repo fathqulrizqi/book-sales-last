@@ -15,7 +15,7 @@ return new class extends Migration
           $table->id();
           $table->string('name');
           $table->bigInteger('account_number');
-          $table->string('image')->nullable();
+          $table->string('image');
           $table->timestamps();
         });
     }

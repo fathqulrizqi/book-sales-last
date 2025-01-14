@@ -20,7 +20,7 @@ class AuthorController extends Controller
       // 1. validator
       $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
-        'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'bio' => 'nullable|string'
       ]);
 
@@ -33,17 +33,21 @@ class AuthorController extends Controller
       }
 
       // 3. upload image
-      $image = $request->file('photo');
-      $image->store('authors', 'public');
+      if ($request->hasFile('photo')) {
+        $image = $request->file('photo');
+        $image->store('authors', 'public');
+        $data["photo"] = $image->hashName();
+    }
+
 
       // 4. insert data
       $author = Author::create([
         "name" => $request->name,
-        "photo" => $image->hashName(),
-        "bio" => $request->bio
+        "bio" => $request->bio,
+        "photo" => isset($data["photo"]) ? $data["photo"] : null
       ]);
 
-      // 5. return response
+      // 6. return response
       return response()->json([
         "success" => true,
         "message" => "Resource added successfully!",
@@ -78,7 +82,8 @@ class AuthorController extends Controller
         // siapkan data yang ingin diupdate
         $data = [
             "name" => $request->name,
-            "bio" => $request->bio
+            "bio" => $request->bio,
+            "photo" => isset($data["photo"]) ? $data["photo"] : null
         ];
 
         // ...upload image

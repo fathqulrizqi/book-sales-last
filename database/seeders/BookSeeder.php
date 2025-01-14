@@ -18,7 +18,7 @@ class BookSeeder extends Seeder
         'description' => 'An orphaned boy enrolls in a school of wizardry, where he learns the truth about himself, his family and the terrible evil that haunts the magical world.',
         'price' => 50000,
         'stock' => 50,
-        'cover_photo' => 'harry_potter.jpg',
+        'cover_photo' => 'https://upload.wikimedia.org/wikipedia/id/b/bf/Harry_Potter_and_the_Sorcerer%27s_Stone.jpg',
         'genre_id' => 1,
         'author_id' => 1,
     ]);
