@@ -21,27 +21,33 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
 
+Route::apiResource('/authors', AuthorController::class)->only(['index', 'show']);
+Route::apiResource('/books', BookController::class)->only(['index', 'show']);
+Route::apiResource('/genres', GenreController::class)->only(['index', 'show']);
+
 // Routes untuk pengguna terautentikasi
 Route::middleware(['auth:api'])->group(function () {
     // Informasi pengguna
     Route::get('/user', fn(Request $request) => $request->user());
 
+    Route::apiResource('/orders', OrderController::class)->only(['index', 'show', 'store']);
+    Route::apiResource('/payment_methods', PaymentMethodController::class)->only(['index', 'show']);
+
     // Routes untuk admin dan staff
     Route::middleware(['role:admin,staff'])->group(function () {
-        // Route::apiResource('/books', BookController::class)->only(['store', 'update', 'destroy']);
+        Route::apiResource('/books', BookController::class)->only(['store', 'update', 'destroy']);
         Route::apiResource('/genres', GenreController::class)->only(['store', 'update', 'destroy']);
         Route::apiResource('/authors', AuthorController::class)->only(['store', 'update', 'destroy']);
-    });
-    Route::middleware(['role:admin'])->group(function () {
-        Route::apiResource('/payment_methods', PaymentMethodController::class)->only(['index', 'store', 'update', 'destroy']);
-        Route::apiResource('/payments', PaymentController::class)->only(['destroy']);
-    });
-    Route::middleware(['role:staff'])->group(function () {
-        Route::apiResource('/payments', PaymentController::class)->only(['update']);
+
+        Route::apiResource('/orders', OrderController::class)->only(['update', 'destroy']);
+        Route::apiResource('/payments', PaymentController::class)->only(['update', 'destroy']);
+        Route::apiResource('/payment_methods', PaymentMethodController::class)->only(['store', 'update', 'destroy']);
+
     });
 
     // Routes untuk customer
     Route::middleware(['role:customer'])->group(function () {
+        Route::apiResource('/books', BookController::class)->only(['store']);
         Route::apiResource('/orders', OrderController::class)->only(['index', 'store', 'show']);
         Route::apiResource('/orderdetails', OrderDetailController::class)->only(['index', 'store', 'show']);
         Route::apiResource('/payments', PaymentController::class)->only(['store']);
@@ -49,9 +55,6 @@ Route::middleware(['auth:api'])->group(function () {
 });
 
 // Routes publik (tanpa autentikasi)
-Route::apiResource('/payments', PaymentController::class)->only(['index']);
-Route::apiResource('/payment_methods', PaymentMethodController::class)->only(['index', 'store', 'show', 'destroy']);
-Route::apiResource('/authors', AuthorController::class);
-Route::apiResource('/books', BookController::class);
-Route::apiResource('/genres', GenreController::class);
+
+
 

@@ -32,7 +32,7 @@ class PaymentMethodController extends Controller
         $validator = Validator::make($request->all(), [
             "name" => "required|string",
             "account_number" => "required|regex:/^[0-9]+$/",
-            "image" => "required|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
+            "image" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048"
         ]);
 
         if ($validator->fails()) {
@@ -42,13 +42,15 @@ class PaymentMethodController extends Controller
             ], 422);
         }
 
+        if ($request->hasFile('image')) {
         $image = $request->file('image');
         $image->store('payment_methods', 'public');
+        }
 
         $paymentMethod = PaymentMethod::create([
             "name" => $request->name,
             "account_number" => $request->account_number,
-            "image" => $image->hashName()
+            "image" => isset($image) ? $image->hashName() : null
         ]);
 
         return new PaymentMethodResource(true, "Get All Resource", $paymentMethod);
@@ -103,6 +105,7 @@ class PaymentMethodController extends Controller
         $data = [
             "name" => $request->name,
             "account_number" => $request->account_number,
+            "image" => isset($data["image"]) ? $data["image"] : null
         ];
 
         if ($request->hasFile('image')) {
