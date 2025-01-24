@@ -28,7 +28,7 @@ class BookSeeder extends Seeder
         'description' => 'A family heads to an isolated hotel for the winter where an evil and sinister presence influences the father into violence, while his psychic son sees horrific premonitions from both past and future.',
         'price' => 25000,
         'stock' => 30,
-        'cover_photo' => 'the_shining.jpg',
+        'cover_photo' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCYVMBXDOXKabnDY38Q2nl2ABd6PCn8CR6Kg&s',
         'genre_id' => 2,
         'author_id' => 2,
     ]);
@@ -38,7 +38,7 @@ class BookSeeder extends Seeder
         'description' => 'An inspiring story about the struggle of a group of students and their two teachers in a remote village in Belitung to keep their school alive.',
         'price' => 40000,
         'stock' => 75,
-        'cover_photo' => 'laskar_pelangi.jpg',
+        'cover_photo' => 'https://upload.wikimedia.org/wikipedia/id/1/17/Laskar_Pelangi_film.jpg',
         'genre_id' => 3,
         'author_id' => 3,
     ]);
